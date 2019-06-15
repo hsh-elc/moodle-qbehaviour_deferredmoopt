@@ -34,5 +34,5 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qbehaviour_deferredfeedback_renderer extends qbehaviour_renderer {
+class qbehaviour_deferredprogrammingtask_renderer extends qbehaviour_renderer {
 }
