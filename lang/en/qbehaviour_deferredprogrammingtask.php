@@ -23,5 +23,11 @@
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+$string['finished'] = 'Finished: {$a}';
+$string['graded'] = 'Graded: {$a}';
+$string['graderunavailable'] = 'Automatic grading failed';
+$string['grading'] = 'Grading: {$a}';
+$string['gradingsummary'] = 'The submission has been sent to the grader for grading.';
+$string['gradedsummary'] = 'The submission has been graded by the grader';
 $string['pluginname'] = 'Deferred feedback for programming tasks';
 $string['privacy:metadata'] = 'The programming task deferred feedback behaviour plugin does not store any personal data.';

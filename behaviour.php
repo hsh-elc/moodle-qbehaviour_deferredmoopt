@@ -54,6 +54,10 @@ class qbehaviour_deferredprogrammingtask extends question_behaviour_with_save {
             return $this->process_comment($pendingstep);
         } else if ($pendingstep->has_behaviour_var('finish')) {
             return $this->process_finish($pendingstep);
+        } else if ($pendingstep->has_behaviour_var('gradingresult')) {
+            return $this->process_gradingresult($pendingstep);
+        } else if ($pendingstep->has_behaviour_var('graderunavailable')) {
+            return $this->process_graderunavilable($pendingstep);
         } else {
             return $this->process_save($pendingstep);
         }
@@ -103,7 +107,11 @@ class qbehaviour_deferredprogrammingtask extends question_behaviour_with_save {
         if ($step->has_behaviour_var('comment')) {
             return $this->summarise_manual_comment($step);
         } else if ($step->has_behaviour_var('finish')) {
-            return $this->summarise_finish($step);
+            return get_string('finished', 'qbehaviour_deferredprogrammingtask', get_string('gradingsummary', 'qbehaviour_deferredprogrammingtask'));
+        } else if ($step->has_behaviour_var('gradingresult')) {
+            return get_string('graded', 'qbehaviour_deferredprogrammingtask', get_string('gradedsummary', 'qbehaviour_deferredprogrammingtask'));
+        } else if ($step->has_behaviour_var('graderunavailable')) {
+            return get_string('grading', 'qbehaviour_immediateprogrammingtask', get_string('graderunavailable', 'qbehaviour_immediateprogrammingtask'));
         } else {
             return $this->summarise_save($step);
         }
@@ -121,8 +129,49 @@ class qbehaviour_deferredprogrammingtask extends question_behaviour_with_save {
         } else {
             $state = $this->question->grade_response_asynch($this->qa);
             $pendingstep->set_state($state);
+            $pendingstep->set_new_response_summary($this->question->summarise_response($response));
         }
-        $pendingstep->set_new_response_summary($this->question->summarise_response($response));
+        return question_attempt::KEEP;
+    }
+
+    public function process_gradingresult(question_attempt_pending_step $pendingstep) {
+        global $DB;
+
+        $processdbid = $pendingstep->get_qt_var('gradeprocessdbid');
+        $exists = $DB->record_exists('qtype_programmingtask_grprcs', ['id' => $processdbid]);
+        if (!$exists) {
+            //It's a regrade, discard this *old* result
+            return question_attempt::DISCARD;
+        }
+
+        $fraction = $pendingstep->get_qt_var('score');
+
+        $pendingstep->set_fraction($fraction);
+        $pendingstep->set_state(question_state::graded_state_for_fraction($fraction));
+        $pendingstep->set_new_response_summary($this->question->summarise_response($pendingstep->get_all_data()));
+
+        //If this is the real result for a regrade we should update the quiz_overview_regrades table to properly display the new result
+        $regrade_record = $DB->get_record('quiz_overview_regrades', ['questionusageid' => $this->qa->get_usage_id(), 'slot' => $this->qa->get_slot()]);
+        if ($regrade_record) {
+            $regrade_record->newfraction = $fraction;
+            $DB->update_record('quiz_overview_regrades', $regrade_record);
+        }
+
+        return question_attempt::KEEP;
+    }
+
+    public function process_graderunavilable(question_attempt_pending_step $pendingstep) {
+        global $DB;
+
+        $processdbid = $pendingstep->get_qt_var('gradeprocessdbid');
+        $exists = $DB->record_exists('qtype_programmingtask_grprcs', ['id' => $processdbid]);
+        if (!$exists) {
+            //It's a regrade, discard this old step
+            return question_attempt::DISCARD;
+        }
+
+        $pendingstep->set_state(question_state::$needsgrading);
+
         return question_attempt::KEEP;
     }
 
