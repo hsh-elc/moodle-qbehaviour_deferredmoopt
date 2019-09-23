@@ -118,6 +118,8 @@ class qbehaviour_deferredprogrammingtask extends question_behaviour_with_save {
     }
 
     public function process_finish(question_attempt_pending_step $pendingstep) {
+        global $DB;
+
         if ($this->qa->get_state()->is_finished()) {
             return question_attempt::DISCARD;
         }
@@ -127,7 +129,10 @@ class qbehaviour_deferredprogrammingtask extends question_behaviour_with_save {
             $pendingstep->set_state(question_state::$gaveup);
             $pendingstep->set_fraction($this->get_min_fraction());
         } else {
-            $state = $this->question->grade_response_asynch($this->qa);
+            $record = $DB->get_record('question_usages', array('id' => $this->qa->get_usage_id()), 'contextid');
+            $quba_context_id = $record->contextid;
+            $responsefiles = $this->qa->get_last_qt_files('answerfiles', $quba_context_id);
+            $state = $this->question->grade_response_asynch($this->qa, $responsefiles);
             $pendingstep->set_state($state);
             $pendingstep->set_new_response_summary($this->question->summarise_response($response));
         }
