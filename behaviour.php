@@ -149,7 +149,8 @@ class qbehaviour_deferredprogrammingtask extends question_behaviour_with_save {
             return question_attempt::DISCARD;
         }
 
-        $fraction = $pendingstep->get_qt_var('score');
+        $score = $pendingstep->get_qt_var('score');
+        $fraction = $score / $this->qa->get_max_mark();
 
         $pendingstep->set_fraction($fraction);
         $pendingstep->set_state(question_state::graded_state_for_fraction($fraction));
