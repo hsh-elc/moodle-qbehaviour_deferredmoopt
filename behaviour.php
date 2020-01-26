@@ -129,10 +129,38 @@ class qbehaviour_deferredprogrammingtask extends question_behaviour_with_save {
             $pendingstep->set_state(question_state::$gaveup);
             $pendingstep->set_fraction($this->get_min_fraction());
         } else {
-            $record = $DB->get_record('question_usages', array('id' => $this->qa->get_usage_id()), 'contextid');
-            $quba_context_id = $record->contextid;
-            $responsefiles = $this->qa->get_last_qt_files('answerfiles', $quba_context_id);
-            $state = $this->question->grade_response_asynch($this->qa, $responsefiles);
+            if ($this->question->enablefilesubmissions) {
+                $record = $DB->get_record('question_usages', array('id' => $this->qa->get_usage_id()), 'contextid');
+                $quba_context_id = $record->contextid;
+                $responsefiles = $this->qa->get_last_qt_files('answerfiles', $quba_context_id);
+            }
+            $freetextanswers = [];
+            if ($this->question->enablefreetextsubmissions) {
+                $autogeneratenames = $this->question->ftsautogeneratefilenames;
+                for ($i = 0; $i < $this->question->ftsmaxnumfields; $i++) {
+                    $text = $response["answertext$i"];
+                    if ($text == '') {
+                        continue;
+                    }
+                    $record = $DB->get_record('qtype_programmingtask_fts', ['questionid' => $this->question->id, 'inputindex' => $i]);
+                    $filename = $response["answerfilename$i"] ?? '';        //By default use submitted filename
+                    //Overwrite filename if necessary
+                    if ($record) {
+                        if ($record->presetfilename) {
+                            $filename = $record->filename;
+                        } else if ($filename == '') {
+                            $tmp = $i + 1;
+                            $filename = "File$tmp.txt";
+                        }
+                    } else if ($autogeneratenames || $filename == '') {
+                        $tmp = $i + 1;
+                        $filename = "File$tmp.txt";
+                    }
+                    $freetextanswers[$filename] = $text;
+                }
+            }
+
+            $state = $this->question->grade_response_asynch($this->qa, $responsefiles ?? [], $freetextanswers);
             $pendingstep->set_state($state);
             $pendingstep->set_new_response_summary($this->question->summarise_response($response));
         }
