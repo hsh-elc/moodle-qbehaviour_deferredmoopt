@@ -134,7 +134,7 @@ class qbehaviour_deferredprogrammingtask extends question_behaviour_with_save {
                 $quba_context_id = $record->contextid;
                 $responsefiles = $this->qa->get_last_qt_files('answerfiles', $quba_context_id);
             }
-            $freetextanswers = [];
+
             if ($this->question->enablefreetextsubmissions) {
                 $autogeneratenames = $this->question->ftsautogeneratefilenames;
                 for ($i = 0; $i < $this->question->ftsmaxnumfields; $i++) {
@@ -160,7 +160,7 @@ class qbehaviour_deferredprogrammingtask extends question_behaviour_with_save {
                 }
             }
 
-            $state = $this->question->grade_response_asynch($this->qa, $responsefiles ?? [], $freetextanswers);
+            $state = $this->question->grade_response_asynch($this->qa, $responsefiles ?? [], $freetextanswers ?? []);
             $pendingstep->set_state($state);
             $pendingstep->set_new_response_summary($this->question->summarise_response($response));
         }
