@@ -21,10 +21,7 @@
  * @copyright  2012 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-
 defined('MOODLE_INTERNAL') || die();
-
 
 /**
  * Question behaviour type information for deferred feedback behaviour.
@@ -33,6 +30,7 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class qbehaviour_deferredprogrammingtask_type extends question_behaviour_type {
+
     public function is_archetypal() {
         return true;
     }
@@ -40,4 +38,5 @@ class qbehaviour_deferredprogrammingtask_type extends question_behaviour_type {
     public function get_unused_display_options() {
         return array('generalfeedback', 'rightanswer');
     }
+
 }
