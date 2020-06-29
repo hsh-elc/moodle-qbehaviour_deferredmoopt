@@ -135,7 +135,7 @@ class qbehaviour_deferredprogrammingtask extends question_behaviour_with_save {
             if ($this->question->enablefilesubmissions) {
                 $record = $DB->get_record('question_usages', array('id' => $this->qa->get_usage_id()), 'contextid');
                 $qubacontextid = $record->contextid;
-                $responsefiles = $this->qa->get_last_qt_files('answerfiles', $qubacontextid);
+                $responsefiles = $this->qa->get_last_qt_files('answer', $qubacontextid);
             }
 
             if ($this->question->enablefreetextsubmissions) {
