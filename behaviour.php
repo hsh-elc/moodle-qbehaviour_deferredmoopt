@@ -56,7 +56,7 @@ class qbehaviour_deferredprogrammingtask extends question_behaviour_with_save {
         } else if ($pendingstep->has_behaviour_var('gradingresult')) {
             return $this->process_gradingresult($pendingstep);
         } else if ($pendingstep->has_behaviour_var('graderunavailable')) {
-            return $this->process_graderunavilable($pendingstep);
+            return $this->process_graderunavailable($pendingstep);
         } else {
             return $this->process_save($pendingstep);
         }
@@ -200,7 +200,7 @@ class qbehaviour_deferredprogrammingtask extends question_behaviour_with_save {
         return question_attempt::KEEP;
     }
 
-    public function process_graderunavilable(question_attempt_pending_step $pendingstep) {
+    public function process_graderunavailable(question_attempt_pending_step $pendingstep) {
         global $DB;
 
         $processdbid = $pendingstep->get_qt_var('gradeprocessdbid');
