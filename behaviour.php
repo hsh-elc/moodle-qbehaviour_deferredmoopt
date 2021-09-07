@@ -34,10 +34,10 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qbehaviour_deferredprogrammingtask extends question_behaviour_with_save {
+class qbehaviour_deferredmoopt extends question_behaviour_with_save {
 
     public function is_compatible_question(question_definition $question) {
-        return $question instanceof qtype_programmingtask_question;
+        return $question instanceof qtype_moopt_question;
     }
 
     public function get_min_fraction() {
@@ -107,14 +107,14 @@ class qbehaviour_deferredprogrammingtask extends question_behaviour_with_save {
         if ($step->has_behaviour_var('comment')) {
             return $this->summarise_manual_comment($step);
         } else if ($step->has_behaviour_var('finish')) {
-            return get_string('finished', 'qbehaviour_deferredprogrammingtask',
-                    get_string('gradingsummary', 'qbehaviour_deferredprogrammingtask'));
+            return get_string('finished', 'qbehaviour_deferredmoopt',
+                    get_string('gradingsummary', 'qbehaviour_deferredmoopt'));
         } else if ($step->has_behaviour_var('gradingresult')) {
-            return get_string('graded', 'qbehaviour_deferredprogrammingtask',
-                    get_string('gradedsummary', 'qbehaviour_deferredprogrammingtask'));
+            return get_string('graded', 'qbehaviour_deferredmoopt',
+                    get_string('gradedsummary', 'qbehaviour_deferredmoopt'));
         } else if ($step->has_behaviour_var('graderunavailable')) {
-            return get_string('grading', 'qbehaviour_immediateprogrammingtask',
-                    get_string('graderunavailable', 'qbehaviour_immediateprogrammingtask'));
+            return get_string('grading', 'qbehaviour_immediatemoopt',
+                    get_string('graderunavailable', 'qbehaviour_immediatemoopt'));
         } else {
             return $this->summarise_save($step);
         }
@@ -145,7 +145,7 @@ class qbehaviour_deferredprogrammingtask extends question_behaviour_with_save {
                     if ($text == '') {
                         continue;
                     }
-                    $record = $DB->get_record('qtype_programmingtask_fts',
+                    $record = $DB->get_record('qtype_moopt_freetexts',
                             ['questionid' => $this->question->id, 'inputindex' => $i]);
                     $filename = $response["answerfilename$i"] ?? '';        // By default use submitted filename.
                     // Overwrite filename if necessary.
@@ -175,7 +175,7 @@ class qbehaviour_deferredprogrammingtask extends question_behaviour_with_save {
         global $DB;
 
         $processdbid = $pendingstep->get_qt_var('gradeprocessdbid');
-        $exists = $DB->record_exists('qtype_programmingtask_grprcs', ['id' => $processdbid]);
+        $exists = $DB->record_exists('qtype_moopt_gradeprocesses', ['id' => $processdbid]);
         if (!$exists) {
             // It's a regrade, discard this *old* result.
             return question_attempt::DISCARD;
@@ -204,7 +204,7 @@ class qbehaviour_deferredprogrammingtask extends question_behaviour_with_save {
         global $DB;
 
         $processdbid = $pendingstep->get_qt_var('gradeprocessdbid');
-        $exists = $DB->record_exists('qtype_programmingtask_grprcs', ['id' => $processdbid]);
+        $exists = $DB->record_exists('qtype_moopt_gradeprocesses', ['id' => $processdbid]);
         if (!$exists) {
             // It's a regrade, discard this old step.
             return question_attempt::DISCARD;

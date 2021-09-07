@@ -25,9 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'qbehaviour_deferredprogrammingtask';
-$plugin->version   = 2019052700;
-
+$plugin->component = 'qbehaviour_deferredmoopt';
+$plugin->version   = 2021090900;
 $plugin->requires  = 2018112800;
-
 $plugin->maturity  = MATURITY_ALPHA;

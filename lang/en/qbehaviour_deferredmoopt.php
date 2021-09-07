@@ -28,5 +28,5 @@ $string['graderunavailable'] = 'Automatic grading failed';
 $string['grading'] = 'Grading: {$a}';
 $string['gradingsummary'] = 'The submission has been sent to the grader for grading.';
 $string['gradedsummary'] = 'The submission has been graded by the grader';
-$string['pluginname'] = 'Deferred feedback for programming tasks';
-$string['privacy:metadata'] = 'The programming task deferred feedback behaviour plugin does not store any personal data.';
+$string['pluginname'] = 'Deferred feedback for Moodle Programming Tasks (MooPT)';
+$string['privacy:metadata'] = 'The MooPT deferred feedback behaviour plugin does not store any personal data.';
