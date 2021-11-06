@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die();
 class qbehaviour_deferredmoopt_type extends question_behaviour_type {
 
     public function is_archetypal() {
-        return true;
+        return false;
     }
 
     public function get_unused_display_options() {
