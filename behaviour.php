@@ -181,12 +181,16 @@ class qbehaviour_deferredmoopt extends question_behaviour_with_save {
             return question_attempt::DISCARD;
         }
 
-        $score = $pendingstep->get_qt_var('score');
-        $maxmark = $this->qa->get_max_mark();
-        if ($maxmark == 0) {
-            $fraction = 0;
+        if ($pendingstep->has_qt_var('score')) {
+            $score = $pendingstep->get_qt_var('score');
+            $maxmark = $this->qa->get_max_mark();
+            if ($maxmark == 0) {
+                $fraction = 0;
+            } else {
+                $fraction = $score / $maxmark;
+            }
         } else {
-            $fraction = $score / $maxmark;
+            $fraction = 0;
         }
 
         $pendingstep->set_fraction($fraction);
